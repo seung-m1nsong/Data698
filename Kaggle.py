@@ -77,21 +77,31 @@ dict_origin = {
     "Viktor&Rolf": "Netherlands","Violet Voss": "USA","Viori": "USA","Virtue": "USA","Viseart": "France","VOLUSPA": "USA","Wander Beauty": "USA",
     "WASO": "Japan","Westman Atelier": "USA","Wishful": "UAE","World of Chris Collins": "USA","Youth To The People": "USA","Yves Saint Laurent": "France"
 }
-
 df["origin"] = df["brand_name"].map(dict_origin)
-
 
 #output_file_path = r"C:\Users\SeungminSong\Downloads\698_Research\product_info_with_origin.csv"
 #df.to_csv(output_file_path, index=False)
 
 #print(df.head())
 
-origin_counts = df["origin"].value_counts()
+df_skincare = df[df["primary_category"].isin(["Skincare", "Men"])]
+
+df_skincare = df_skincare[(df_skincare["primary_category"] != "Men") | (df_skincare["secondary_category"] == "Skincare")]
+
+selected_columns = ["brand_name", "loves_count", "rating", "reviews", "ingredients", 
+                    "price_usd", "primary_category", "secondary_category", "origin"]
+
+df_skincare_ft = df_skincare[selected_columns]
+
+df_skincare_ft = df_skincare_ft.dropna(subset=["loves_count", "rating", "ingredients"])
+
+print(df_skincare_ft.head())
+
+
+origin_counts = df_skincare["origin"].value_counts()
 print(origin_counts) 
 
-
-unique_brands = df.drop_duplicates(subset=["brand_name"])
+unique_brands = df_skincare.drop_duplicates(subset=["brand_name"])
 origin_counts_unique = unique_brands["origin"].value_counts()
 
 print(origin_counts_unique) 
-
