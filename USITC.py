@@ -1,5 +1,3 @@
-# 코드 실행 상태가 리셋되어 CSV 데이터를 다시 불러와서 처리합니다.
-
 import pandas as pd
 
 url = "https://raw.githubusercontent.com/seung-m1nsong/Data698/refs/heads/main/DataWeb-Query-Export.csv"
