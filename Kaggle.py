@@ -89,19 +89,61 @@ df_skincare = df[df["primary_category"].isin(["Skincare", "Men"])]
 df_skincare = df_skincare[(df_skincare["primary_category"] != "Men") | (df_skincare["secondary_category"] == "Skincare")]
 
 selected_columns = ["brand_name", "loves_count", "rating", "reviews", "ingredients", 
-                    "price_usd", "primary_category", "secondary_category", "origin"]
+                    "price_usd", "primary_category", "secondary_category","tertiary_category", "origin"]
 
 df_skincare_ft = df_skincare[selected_columns]
-
+# Drop NA
 df_skincare_ft = df_skincare_ft.dropna(subset=["loves_count", "rating", "ingredients"])
 
 print(df_skincare_ft.head())
 
 
-origin_counts = df_skincare["origin"].value_counts()
+total_count = len(df_skincare_ft)  
+secondary_category_counts = df_skincare_ft["secondary_category"].value_counts()
+
+secondary_category_df = pd.DataFrame({
+    "Secondary Category": secondary_category_counts.index,
+    "Count": secondary_category_counts.values,
+    "Percentage": (secondary_category_counts.values / total_count) * 100  
+})
+secondary_category_df["Percentage"] = secondary_category_df["Percentage"].astype(int)
+print(secondary_category_df)
+
+
+total_count = len(df_skincare_ft)  
+tertiary_category_counts = df_skincare_ft["tertiary_category"].value_counts()
+
+tertiary_category_df = pd.DataFrame({
+    "Third Category": tertiary_category_counts.index,
+    "Count": tertiary_category_counts.values,
+    "Percentage": (tertiary_category_counts.values / total_count) * 100  
+})
+tertiary_category_df["Percentage"] = tertiary_category_df["Percentage"].astype(int)
+print(tertiary_category_df)
+
+
+origin_counts = df_skincare_ft["origin"].value_counts()
 print(origin_counts) 
 
-unique_brands = df_skincare.drop_duplicates(subset=["brand_name"])
+
+unique_brands = df_skincare_ft.drop_duplicates(subset=["brand_name"])
 origin_counts_unique = unique_brands["origin"].value_counts()
 
-print(origin_counts_unique) 
+filtered_origins = origin_counts_unique[origin_counts_unique > 2].index
+unique_brands_filtered = unique_brands[unique_brands["origin"].isin(filtered_origins)]
+
+origin_counts_unique_filtered = unique_brands_filtered["origin"].value_counts()
+
+print(origin_counts_unique_filtered)
+
+
+# Drop unique brand under 2
+
+#output_file_path = r"C:\Users\SeungminSong\Downloads\698_Research\product_info_with_origin.csv"
+#df_skincare_ft.to_csv(output_file_path, index=False)
+
+
+origin_rating_avg = df_skincare_ft.groupby("origin")["rating"].mean().reset_index()
+origin_rating_avg = origin_rating_avg.sort_values(by="rating", ascending=False)
+
+print(origin_rating_avg)
