@@ -106,3 +106,14 @@ origin_rating_avg = df_skincare_ft.groupby("origin")["rating"].mean().reset_inde
 origin_rating_avg = origin_rating_avg.sort_values(by="rating", ascending=False)
 
 print(origin_rating_avg)
+
+# Comparison of Skincare Import Volumes and Consumer Ratings by Country
+data_en = {
+    "Country": ["France", "South Korea", "United Kingdom", "Japan", "Australia"],
+    "Import Volume Rank": [1, 2, 3, 4, 5],
+    "Import Volume (Billion USD)": [6.95, 4.86, 2.36, 1.17, 0.27],
+    "Rating Rank": [4, 1, 5, 3, 2]
+}
+
+df_en = pd.DataFrame(data_en)
+display(df_en)
