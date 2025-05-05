@@ -1,5 +1,4 @@
-# %%
-# 1. Open trade data
+# 1. Load trade data
 
 import pandas as pd
 import os
